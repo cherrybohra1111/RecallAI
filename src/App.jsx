@@ -31,10 +31,14 @@ function App() {
           />
 
           <button onClick={()=>
-              setCurrentCardIndex(currentCardIndex+1)
-            }
-            disabled={currentCardIndex >= totalCards - 1}
+              setCurrentCardIndex(currentCardIndex+1)}
+              disabled={currentCardIndex >= totalCards - 1}
             >Next</button>
+
+            <button onClick={()=>
+              setCurrentCardIndex(currentCardIndex-1)}
+              disabled={currentCardIndex === 0 }
+            >Prev</button>
     
         </main>
     </>
