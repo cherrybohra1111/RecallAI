@@ -24,21 +24,23 @@ function App() {
     <>
       <Header />
         <main>
-
+          <p>Card {currentCardIndex + 1} of {totalCards}</p>
           <Flashcard 
             question = {cards[currentCardIndex].question}
             answer = {cards[currentCardIndex].answer}
+            key={currentCardIndex}
           />
 
+          <button onClick={()=>
+            setCurrentCardIndex(currentCardIndex-1)}
+            disabled={currentCardIndex === 0 }
+          >Prev</button>
+          
           <button onClick={()=>
               setCurrentCardIndex(currentCardIndex+1)}
               disabled={currentCardIndex >= totalCards - 1}
             >Next</button>
 
-            <button onClick={()=>
-              setCurrentCardIndex(currentCardIndex-1)}
-              disabled={currentCardIndex === 0 }
-            >Prev</button>
     
         </main>
     </>
