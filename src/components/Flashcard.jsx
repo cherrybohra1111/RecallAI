@@ -1,15 +1,26 @@
+import { useState } from 'react'
+
 function Flashcard() {
-  return (
-    <section className="flashcard">
-      <p className="flashcard-label">QUESTION</p>
+    const [isAnswerVisible, setIsAnswerVisible] = useState(false)
 
-      <h2>What is an operating system?</h2>
+    return (
+        <section className="flashcard">
+            <p className="flashcard-label">QUESTION</p>
 
-      <div className="flashcard-answer">
-        An operating system manages computer hardware and software resources.
-      </div>
-    </section>
-  )
+            <h2>What is an operating system?</h2>
+
+            {isAnswerVisible && (
+                <div className="flashcard-answer">
+                    An operating system manages computer hardware and software resources.
+                </div>
+            )}
+
+            <button onClick={() => setIsAnswerVisible(!isAnswerVisible)}>
+                {isAnswerVisible ? 'Hide Answer' : 'Reveal Answer'}
+            </button>
+            
+        </section>
+    )
 }
 
 export default Flashcard
