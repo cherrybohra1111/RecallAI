@@ -24,22 +24,29 @@ function App() {
     <>
       <Header />
         <main>
-          <p>Card {currentCardIndex + 1} of {totalCards}</p>
-          <Flashcard 
-            question = {cards[currentCardIndex].question}
-            answer = {cards[currentCardIndex].answer}
-            key={currentCardIndex}
-          />
+          {cards.length === 0 ? (
+            <p>No cards yet</p>
+          ) : (
+            <>
+            <p>Card {currentCardIndex + 1} of {totalCards}</p>
+            <Flashcard 
+              question = {cards[currentCardIndex].question}
+              answer = {cards[currentCardIndex].answer}
+              key={currentCardIndex}
+            />
+            <button onClick={()=>
+              setCurrentCardIndex(currentCardIndex-1)}
+              disabled={currentCardIndex === 0 }
+            >Prev</button>
+            
+            <button onClick={()=>
+                setCurrentCardIndex(currentCardIndex+1)}
+                disabled={currentCardIndex >= totalCards - 1}
+              >Next</button>
+            </>
+          )}
 
-          <button onClick={()=>
-            setCurrentCardIndex(currentCardIndex-1)}
-            disabled={currentCardIndex === 0 }
-          >Prev</button>
-          
-          <button onClick={()=>
-              setCurrentCardIndex(currentCardIndex+1)}
-              disabled={currentCardIndex >= totalCards - 1}
-            >Next</button>
+
 
           <button onClick={()=>{
             const starterCard = { question: "New Question", answer: "New Answer" };
@@ -48,6 +55,18 @@ function App() {
             setCurrentCardIndex(cards.length);
           }
           }>Add Card</button>
+
+          <button onClick={()=>{
+            const updatedCards = cards.filter((_, i) => i !== currentCardIndex);
+            setCards(
+              updatedCards
+            );
+            setCurrentCardIndex(
+              Math.max(0, Math.min(updatedCards.length - 1, currentCardIndex))
+            )}}
+              disabled={totalCards ===  0}
+          >Delete Card</button>
+
         </main>
     </>
   )
