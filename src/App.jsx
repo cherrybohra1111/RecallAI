@@ -7,13 +7,16 @@ import Flashcard from './components/Flashcard.jsx'
 function App() {
   const [cards , setCards] = useState([
     { question: "What does the acronym HTTP stand for in a website address?",
-      answer: "Hypertext Transfer Protocol"
+      answer: "Hypertext Transfer Protocol",
+      id: crypto.randomUUID()
     },
       { question: "What is the primary characteristic of a closure in JavaScript?",
-      answer: "A closure gives you access to an outer function’s scope from an inner function, preserving those variables even after the outer function finishes executing."
+      answer: "A closure gives you access to an outer function’s scope from an inner function, preserving those variables even after the outer function finishes executing.",
+      id: crypto.randomUUID()
     },
     { question: "What is an Operation Syetem?",
-      answer: "An operating system manages computer hardware and software resources."
+      answer: "An operating system manages computer hardware and software resources.",
+      id: crypto.randomUUID()
     }
   ])
 
@@ -32,7 +35,7 @@ function App() {
             <Flashcard 
               question = {cards[currentCardIndex].question}
               answer = {cards[currentCardIndex].answer}
-              key={currentCardIndex}
+              key={cards[currentCardIndex].id}
             />
             <button onClick={()=>
               setCurrentCardIndex(currentCardIndex-1)}
@@ -49,7 +52,7 @@ function App() {
 
 
           <button onClick={()=>{
-            const starterCard = { question: "New Question", answer: "New Answer" };
+            const starterCard = { question: "New Question", answer: "New Answer" , id: crypto.randomUUID()};
 
             setCards([...cards,starterCard]);
             setCurrentCardIndex(cards.length);
