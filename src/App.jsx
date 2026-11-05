@@ -5,7 +5,7 @@ import Flashcard from './components/Flashcard.jsx'
 
 
 function App() {
-  const cards = [
+  const [cards , setCards] = useState([
     { question: "What does the acronym HTTP stand for in a website address?",
       answer: "Hypertext Transfer Protocol"
     },
@@ -15,9 +15,9 @@ function App() {
     { question: "What is an Operation Syetem?",
       answer: "An operating system manages computer hardware and software resources."
     }
-  ]
-  const totalCards=cards.length;
+  ])
 
+  const totalCards=cards.length;
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
 
   return (
@@ -41,7 +41,13 @@ function App() {
               disabled={currentCardIndex >= totalCards - 1}
             >Next</button>
 
-    
+          <button onClick={()=>{
+            const starterCard = { question: "New Question", answer: "New Answer" };
+
+            setCards([...cards,starterCard]);
+            setCurrentCardIndex(cards.length);
+          }
+          }>Add Card</button>
         </main>
     </>
   )
