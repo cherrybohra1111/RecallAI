@@ -3,6 +3,7 @@ import './App.css'
 import Header from './components/HeaderTemp.jsx'
 import Flashcard from './components/Flashcard.jsx'
 import CardEditor from './components/CardEditor.jsx'
+import DeckForm from './components/DeckForm.jsx'
 
 function App() {
   const [cards , setCards] = useState([
@@ -22,7 +23,8 @@ function App() {
   const [cardResults, setCardResults] = useState({})
 
   const [isEditing, setIsEditing] = useState(false);
-  const [isAdding, setIsAdding] = useState(false)
+  const [isAdding, setIsAdding] = useState(false);
+  const [deckInput, setDeckInput] = useState(null);
 
   const totalCards=cards.length;
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -39,6 +41,15 @@ function App() {
     <>
       <Header />
         <main>
+          <DeckForm onGenerate={setDeckInput} />
+          {deckInput && (
+            <section>
+              <h2>Submitted deck details</h2>
+              <p>Title: {deckInput.title}</p>
+              <p>Subject: {deckInput.subject}</p>
+              <p>Notes: {deckInput.notes}</p>
+            </section>
+          )}
           {isEditing || isAdding ? (
             <CardEditor
               initialQuestion={isAdding ? '' : cards[currentCardIndex].question}
