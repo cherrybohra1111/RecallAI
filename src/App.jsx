@@ -4,7 +4,6 @@ import Header from './components/HeaderTemp.jsx'
 import Flashcard from './components/Flashcard.jsx'
 import CardEditor from './components/CardEditor.jsx'
 
-
 function App() {
   const [cards , setCards] = useState([
     { question: "What does the acronym HTTP stand for in a website address?",
@@ -22,6 +21,7 @@ function App() {
   ])
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isAdding, setIsAdding] = useState(false)
 
   const totalCards=cards.length;
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
@@ -30,32 +30,45 @@ function App() {
     <>
       <Header />
         <main>
-          {isEditing ? (
+          {isEditing || isAdding ? (
             <CardEditor
-              initialQuestion={cards[currentCardIndex].question}
-              initialAnswer={cards[currentCardIndex].answer}
+              initialQuestion={isAdding ? '' : cards[currentCardIndex].question}
+              initialAnswer={isAdding ? '' : cards[currentCardIndex].answer}
               onSave={(question, answer) => {
-                const updatedCards = [...cards]
-                updatedCards[currentCardIndex] = {
-                  ...updatedCards[currentCardIndex],
-                  question,
-                  answer,
+
+                if (isAdding){
+                  const newCard = {
+                    id: crypto.randomUUID(),
+                    question, 
+                    answer,
+                  }
+
+                  setCards([...cards,newCard])
+                  setCurrentCardIndex(cards.length)
                 }
-                setCards(updatedCards)
+                else {
+                  const updatedCards = [...cards]
+                  updatedCards[currentCardIndex] = {
+                    ...updatedCards[currentCardIndex],
+                    question,
+                    answer,
+                  }
+                  setCards(updatedCards)
+                }
+                setIsAdding(false)
                 setIsEditing(false)
               }}
-              onCancel={() => setIsEditing(false)}
+              onCancel={() => {
+                setIsAdding(false)
+                setIsEditing(false)
+              }}
             />
             ) : cards.length === 0 ? (
               <>
                 <p>No cards yet</p>
-                <button onClick={()=>{
-                  const starterCard = { question: "New Question", answer: "New Answer" , id: crypto.randomUUID()};
-
-                  setCards([...cards,starterCard]);
-                  setCurrentCardIndex(cards.length);
-                }
-                }>Add Card</button>
+                <button onClick={()=>setIsAdding(true)}>
+                  Add Card
+                </button>
                 
                 </>
               ) : (
@@ -81,13 +94,9 @@ function App() {
                     disabled={currentCardIndex >= totalCards - 1}
                 >Next</button>
 
-                <button onClick={()=>{
-                  const starterCard = { question: "New Question", answer: "New Answer" , id: crypto.randomUUID()};
-
-                  setCards([...cards,starterCard]);
-                  setCurrentCardIndex(cards.length);
-                }
-                }>Add Card</button>
+                <button onClick={() => setIsAdding(true)}>
+                  Add Card
+                </button>
 
                 <button onClick={()=>{
                   const updatedCards = cards.filter((_, i) => i !== currentCardIndex);
