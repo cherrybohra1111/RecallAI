@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import Header from './components/HeaderTemp.jsx'
 import Flashcard from './components/Flashcard.jsx'
+import CardEditor from './components/CardEditor.jsx'
 
 
 function App() {
@@ -21,8 +22,6 @@ function App() {
   ])
 
   const [isEditing, setIsEditing] = useState(false);
-  const [draftQuestion, setDraftQuestion] = useState('')
-  const [draftAnswer, setDraftAnswer] = useState('')
 
   const totalCards=cards.length;
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
@@ -32,39 +31,21 @@ function App() {
       <Header />
         <main>
           {isEditing ? (
-            <div>
-              <input
-                value={draftQuestion}
-                onChange={(e) => setDraftQuestion(e.target.value)}
-              />
-
-              <textarea
-                value={draftAnswer}
-                onChange={(e) => setDraftAnswer(e.target.value)}
-              />
-              
-              <button onClick={()=>{
-                const updatedCards = [...cards];
-
+            <CardEditor
+              initialQuestion={cards[currentCardIndex].question}
+              initialAnswer={cards[currentCardIndex].answer}
+              onSave={(question, answer) => {
+                const updatedCards = [...cards]
                 updatedCards[currentCardIndex] = {
-                    ...updatedCards[currentCardIndex],
-                    question: draftQuestion,
-                    answer: draftAnswer
-                };
-
-                setCards(updatedCards);
-                setIsEditing(false);
-              }}>
-                Save Changes
-              </button>
-
-              <button onClick={()=>{
-                setIsEditing(false);
-              }}>
-                Cancel Changes
-              </button>
-            </div>
-
+                  ...updatedCards[currentCardIndex],
+                  question,
+                  answer,
+                }
+                setCards(updatedCards)
+                setIsEditing(false)
+              }}
+              onCancel={() => setIsEditing(false)}
+            />
             ) : cards.length === 0 ? (
               <>
                 <p>No cards yet</p>
@@ -86,8 +67,6 @@ function App() {
                   key={cards[currentCardIndex].id}
                 />
                 <button onClick={() =>{
-                  setDraftQuestion(cards[currentCardIndex].question)
-                  setDraftAnswer(cards[currentCardIndex].answer)
                   setIsEditing(true)
                 }}
                 >Edit Card</button>
