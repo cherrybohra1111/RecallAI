@@ -20,6 +20,10 @@ function App() {
     }
   ])
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftQuestion, setDraftQuestion] = useState('')
+  const [draftAnswer, setDraftAnswer] = useState('')
+
   const totalCards=cards.length;
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
 
@@ -27,48 +31,97 @@ function App() {
     <>
       <Header />
         <main>
-          {cards.length === 0 ? (
-            <p>No cards yet</p>
-          ) : (
-            <>
-            <p>Card {currentCardIndex + 1} of {totalCards}</p>
-            <Flashcard 
-              question = {cards[currentCardIndex].question}
-              answer = {cards[currentCardIndex].answer}
-              key={cards[currentCardIndex].id}
-            />
-            <button onClick={()=>
-              setCurrentCardIndex(currentCardIndex-1)}
-              disabled={currentCardIndex === 0 }
-            >Prev</button>
-            
-            <button onClick={()=>
-                setCurrentCardIndex(currentCardIndex+1)}
-                disabled={currentCardIndex >= totalCards - 1}
-              >Next</button>
-            </>
-          )}
+          {isEditing ? (
+            <div>
+              <input
+                value={draftQuestion}
+                onChange={(e) => setDraftQuestion(e.target.value)}
+              />
 
+              <textarea
+                value={draftAnswer}
+                onChange={(e) => setDraftAnswer(e.target.value)}
+              />
+              
+              <button onClick={()=>{
+                const updatedCards = [...cards];
 
+                updatedCards[currentCardIndex] = {
+                    ...updatedCards[currentCardIndex],
+                    question: draftQuestion,
+                    answer: draftAnswer
+                };
 
-          <button onClick={()=>{
-            const starterCard = { question: "New Question", answer: "New Answer" , id: crypto.randomUUID()};
+                setCards(updatedCards);
+                setIsEditing(false);
+              }}>
+                Save Changes
+              </button>
 
-            setCards([...cards,starterCard]);
-            setCurrentCardIndex(cards.length);
-          }
-          }>Add Card</button>
+              <button onClick={()=>{
+                setIsEditing(false);
+              }}>
+                Cancel Changes
+              </button>
+            </div>
 
-          <button onClick={()=>{
-            const updatedCards = cards.filter((_, i) => i !== currentCardIndex);
-            setCards(
-              updatedCards
-            );
-            setCurrentCardIndex(
-              Math.max(0, Math.min(updatedCards.length - 1, currentCardIndex))
-            )}}
-              disabled={totalCards ===  0}
-          >Delete Card</button>
+            ) : cards.length === 0 ? (
+              <>
+                <p>No cards yet</p>
+                <button onClick={()=>{
+                  const starterCard = { question: "New Question", answer: "New Answer" , id: crypto.randomUUID()};
+
+                  setCards([...cards,starterCard]);
+                  setCurrentCardIndex(cards.length);
+                }
+                }>Add Card</button>
+                
+                </>
+              ) : (
+                <>
+                <p>Card {currentCardIndex + 1} of {totalCards}</p>
+                <Flashcard 
+                  question = {cards[currentCardIndex].question}
+                  answer = {cards[currentCardIndex].answer}
+                  key={cards[currentCardIndex].id}
+                />
+                <button onClick={() =>{
+                  setDraftQuestion(cards[currentCardIndex].question)
+                  setDraftAnswer(cards[currentCardIndex].answer)
+                  setIsEditing(true)
+                }}
+                >Edit Card</button>
+    
+                <button onClick={()=>
+                  setCurrentCardIndex(currentCardIndex-1)}
+                  disabled={currentCardIndex === 0 }
+                >Prev</button>
+                
+                <button onClick={()=>
+                    setCurrentCardIndex(currentCardIndex+1)}
+                    disabled={currentCardIndex >= totalCards - 1}
+                >Next</button>
+
+                <button onClick={()=>{
+                  const starterCard = { question: "New Question", answer: "New Answer" , id: crypto.randomUUID()};
+
+                  setCards([...cards,starterCard]);
+                  setCurrentCardIndex(cards.length);
+                }
+                }>Add Card</button>
+
+                <button onClick={()=>{
+                  const updatedCards = cards.filter((_, i) => i !== currentCardIndex);
+                  setCards(
+                    updatedCards
+                  );
+                  setCurrentCardIndex(
+                    Math.max(0, Math.min(updatedCards.length - 1, currentCardIndex))
+                  )}}
+                    disabled={totalCards ===  0}
+                >Delete Card</button>
+                </>
+              )}
 
         </main>
     </>
