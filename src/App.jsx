@@ -19,12 +19,21 @@ function App() {
       id: crypto.randomUUID()
     }
   ])
+  const [cardResults, setCardResults] = useState({})
 
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false)
 
   const totalCards=cards.length;
-  const [currentCardIndex, setCurrentCardIndex] = useState(0)
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+
+  const knownCount = cards.filter(
+    (card) => cardResults[card.id] === 'known'
+  ).length
+
+  const reviewCount = cards.filter(
+    (card) => cardResults[card.id] === 'review'
+  ).length
 
   return (
     <>
@@ -74,6 +83,7 @@ function App() {
               ) : (
                 <>
                 <p>Card {currentCardIndex + 1} of {totalCards}</p>
+                <p>Known: {knownCount} · Review again: {reviewCount}</p>
                 <Flashcard 
                   question = {cards[currentCardIndex].question}
                   answer = {cards[currentCardIndex].answer}
@@ -93,6 +103,25 @@ function App() {
                     setCurrentCardIndex(currentCardIndex+1)}
                     disabled={currentCardIndex >= totalCards - 1}
                 >Next</button>
+
+                <button onClick={()=>
+                  setCardResults({
+                    ...cardResults,
+                    [cards[currentCardIndex].id]: 'known',
+                  })
+                }>
+                  Know it
+                </button>
+
+
+                <button onClick={() =>
+                  setCardResults({
+                    ...cardResults,
+                    [cards[currentCardIndex].id]: 'review',
+                  })
+                }>
+                  Review again
+                </button>
 
                 <button onClick={() => setIsAdding(true)}>
                   Add Card
