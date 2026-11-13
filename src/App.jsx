@@ -105,6 +105,17 @@ function App() {
                   )}
                 </div>
               ))}
+              <button
+                disabled={editingPreviewCardId !== null}
+                onClick={() => {
+                  setCards(generatedCards.map((card) => ({ ...card })))
+                  setCardResults({})
+                  setCurrentCardIndex(0)
+                  setGeneratedCards([])
+                }}
+              >
+                Study these cards
+              </button>
             </section>
           )}
           {isEditing || isAdding ? (
