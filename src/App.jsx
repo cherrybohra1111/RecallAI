@@ -4,6 +4,7 @@ import Header from './components/HeaderTemp.jsx'
 import Flashcard from './components/Flashcard.jsx'
 import CardEditor from './components/CardEditor.jsx'
 import DeckForm from './components/DeckForm.jsx'
+import { generateMockCards } from './services/mockGenerator.js'
 
 function App() {
   const [cards , setCards] = useState([
@@ -25,7 +26,8 @@ function App() {
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [deckInput, setDeckInput] = useState(null);
-
+  const [generatedCards, setGeneratedCards] = useState([]);
+  
   const totalCards=cards.length;
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
@@ -37,17 +39,50 @@ function App() {
     (card) => cardResults[card.id] === 'review'
   ).length
 
+  function handleGenerate(deckDetails) {
+    setDeckInput(deckDetails)
+    setGeneratedCards(generateMockCards(deckDetails.notes))
+  }
+  
   return (
     <>
       <Header />
         <main>
-          <DeckForm onGenerate={setDeckInput} />
+          <DeckForm onGenerate={handleGenerate} />
           {deckInput && (
             <section>
               <h2>Submitted deck details</h2>
               <p>Title: {deckInput.title}</p>
               <p>Subject: {deckInput.subject}</p>
               <p>Notes: {deckInput.notes}</p>
+            </section>
+          )}
+          {generatedCards.length > 0 && (
+            <section>
+              <h2>Generated card preview</h2>
+
+              {generatedCards.map((card) => (
+                <div key={card.id}>
+
+                  <Flashcard
+                    question={card.question}
+                    answer={card.answer}
+                  />
+
+
+                  <button
+                    onClick={() => {
+                      setGeneratedCards((currentCards) =>
+                        currentCards.filter(
+                          (currentCard) => currentCard.id !== card.id
+                        )
+                      )
+                    }}
+                  >
+                    Remove preview card
+                  </button>
+                </div>
+              ))}
             </section>
           )}
           {isEditing || isAdding ? (
