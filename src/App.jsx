@@ -27,6 +27,7 @@ function App() {
   const [isAdding, setIsAdding] = useState(false);
   const [deckInput, setDeckInput] = useState(null);
   const [generatedCards, setGeneratedCards] = useState([]);
+  const [editingPreviewCardId, setEditingPreviewCardId] = useState(null)
   
   const totalCards=cards.length;
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -60,27 +61,48 @@ function App() {
           {generatedCards.length > 0 && (
             <section>
               <h2>Generated card preview</h2>
-
               {generatedCards.map((card) => (
                 <div key={card.id}>
-
-                  <Flashcard
-                    question={card.question}
-                    answer={card.answer}
-                  />
-
-
-                  <button
-                    onClick={() => {
-                      setGeneratedCards((currentCards) =>
-                        currentCards.filter(
-                          (currentCard) => currentCard.id !== card.id
+                  {editingPreviewCardId === card.id ? (
+                    <CardEditor
+                      initialQuestion={card.question}
+                      initialAnswer={card.answer}
+                      onSave={(question, answer) => {
+                        setGeneratedCards((currentCards) =>
+                          currentCards.map((currentCard) =>
+                            currentCard.id === card.id
+                              ? { ...currentCard, question, answer }
+                              : currentCard
+                          )
                         )
-                      )
-                    }}
-                  >
-                    Remove preview card
-                  </button>
+                        setEditingPreviewCardId(null)
+                      }}
+                      onCancel={() => setEditingPreviewCardId(null)}
+                    />
+                  ) : (
+                    <>
+                      <Flashcard
+                        question={card.question}
+                        answer={card.answer}
+                      />
+
+                      <button onClick={() => setEditingPreviewCardId(card.id)}>
+                        Edit preview card
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setGeneratedCards((currentCards) =>
+                            currentCards.filter(
+                              (currentCard) => currentCard.id !== card.id
+                            )
+                          )
+                        }}
+                      >
+                        Remove preview card
+                      </button>
+                    </>
+                  )}
                 </div>
               ))}
             </section>
