@@ -1,5 +1,5 @@
 import User from '../../models/User.js'
-import { hashPassword } from '../../utils/password.js'
+import { hashPassword, verifyPassword } from '../../utils/password.js'
 
 export async function registerUser(req, res, next) {
   try {
@@ -38,5 +38,45 @@ export async function registerUser(req, res, next) {
     }
 
     next(error)
+  }
+}
+
+export async function loginUser(req, res, next) {
+  try {
+    const { email, password } = req.body
+
+    const user = await User.findOne({ email }).select('+passwordHash')
+
+    if (!user || !(await verifyPassword(password, user.passwordHash))) {
+      return res.status(401).json({ message: 'Invalid email or password.' })
+    }
+
+    // Give the authenticated user a fresh session ID.
+    await new Promise((resolve, reject) => {
+      req.session.regenerate((error) => {
+        if (error) reject(error)
+        else resolve()
+      })
+    })
+
+    req.session.userId = user.id
+
+    // Wait for MongoDB to save the session before returning success.
+    await new Promise((resolve, reject) => {
+      req.session.save((error) => {
+        if (error) reject(error)
+        else resolve()
+      })
+    })
+
+    return res.status(200).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      },
+    })
+  } catch (error) {
+    return next(error)
   }
 }
