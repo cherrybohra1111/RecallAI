@@ -90,3 +90,25 @@ export function getCurrentUser(req, res) {
     },
   })
 }
+
+export async function logoutUser(req, res, next) {
+  try {
+    await new Promise((resolve, reject) => {
+      req.session.destroy((error) => {
+        if (error) reject(error)
+        else resolve()
+      })
+    })
+
+    res.clearCookie('connect.sid', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      path: '/',
+    })
+
+    return res.status(200).json({ message: 'Logged out successfully.' })
+  } catch (error) {
+    return next(error)
+  }
+}
