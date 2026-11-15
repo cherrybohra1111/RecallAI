@@ -1,5 +1,10 @@
 import { Router } from 'express'
-import { getCurrentUser, loginUser, registerUser } from '../controllers/authController.js'
+import {
+  getCurrentUser,
+  loginUser,
+  logoutUser,
+  registerUser,
+} from '../controllers/authController.js'
 import { requireAuth } from '../middleware/requireAuth.js'
 import { validateRequest } from '../middleware/validateRequest.js'
 import {
@@ -23,4 +28,6 @@ router.post(
 )
 
 router.get('/me', requireAuth, getCurrentUser)
+router.post('/logout', requireAuth, logoutUser)
+
 export default router
