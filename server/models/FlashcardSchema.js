@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { FLASHCARD_STATUS } from '../utils/constants.js'
 
 const flashcardSchema = new mongoose.Schema({
   question: {
@@ -13,8 +14,8 @@ const flashcardSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['unreviewed', 'known', 'needs_review'],
-    default: 'unreviewed',
+    enum: Object.values(FLASHCARD_STATUS),
+    default: FLASHCARD_STATUS.UNREVIEWED,
   },
 })
 
