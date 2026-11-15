@@ -80,3 +80,13 @@ export async function loginUser(req, res, next) {
     return next(error)
   }
 }
+
+export function getCurrentUser(req, res) {
+  return res.status(200).json({
+    user: {
+      id: req.user.id,
+      email: req.user.email,
+      username: req.user.username,
+    },
+  })
+}
