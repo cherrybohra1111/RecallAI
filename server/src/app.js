@@ -2,6 +2,7 @@ import express from 'express'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import authRoutes from './routes/authRoutes.js'
+import deckRoutes from './routes/deckRoutes.js'
 
 const app = express()
 
@@ -30,5 +31,6 @@ app.get('/api/health', (req, res) => {
 })
 
 app.use('/api/auth', authRoutes)
+app.use('/api/decks', deckRoutes)
 
 export default app
