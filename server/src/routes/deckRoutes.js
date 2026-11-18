@@ -1,5 +1,10 @@
 import { Router } from 'express'
-import { createDeck, listDecks, getDeckById } from '../controllers/deckController.js'
+import {
+  createDeck,
+  deleteDeck,
+  getDeckById,
+  listDecks,
+} from '../controllers/deckController.js'
 import { requireAuth } from '../middleware/requireAuth.js'
 import { validateRequest } from '../middleware/validateRequest.js'
 import { createDeckValidator, deckIdValidator } from '../validators/deckValidators.js'
@@ -26,5 +31,13 @@ router.get(
   deckIdValidator(),
   validateRequest,
   getDeckById
+)
+
+router.delete(
+  '/:deckId',
+  requireAuth,
+  deckIdValidator(),
+  validateRequest,
+  deleteDeck
 )
 export default router
