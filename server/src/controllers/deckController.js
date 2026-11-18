@@ -64,3 +64,26 @@ export async function deleteDeck(req, res, next) {
     return next(error)
   }
 }
+
+export async function updateDeck(req, res, next) {
+  try {
+    const { title, subject, notes, cards } = req.body
+
+    const deck = await Deck.findOneAndUpdate(
+      {
+        _id: req.params.deckId,
+        owner: req.user._id,
+      },
+      { title, subject, notes, cards },
+      { new: true, runValidators: true }
+    )
+
+    if (!deck) {
+      return res.status(404).json({ message: 'Deck not found.' })
+    }
+
+    return res.status(200).json({ deck })
+  } catch (error) {
+    return next(error)
+  }
+}

@@ -4,6 +4,7 @@ import {
   deleteDeck,
   getDeckById,
   listDecks,
+  updateDeck
 } from '../controllers/deckController.js'
 import { requireAuth } from '../middleware/requireAuth.js'
 import { validateRequest } from '../middleware/validateRequest.js'
@@ -40,4 +41,14 @@ router.delete(
   validateRequest,
   deleteDeck
 )
+
+router.put(
+  '/:deckId',
+  requireAuth,
+  deckIdValidator(),
+  createDeckValidator(),
+  validateRequest,
+  updateDeck
+)
+
 export default router
