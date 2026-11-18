@@ -30,3 +30,20 @@ export async function listDecks(req, res, next) {
     return next(error)
   }
 }
+
+export async function getDeckById(req, res, next) {
+  try {
+    const deck = await Deck.findOne({
+      _id: req.params.deckId,
+      owner: req.user._id,
+    })
+
+    if (!deck) {
+      return res.status(404).json({ message: 'Deck not found.' })
+    }
+
+    return res.status(200).json({ deck })
+  } catch (error) {
+    return next(error)
+  }
+}

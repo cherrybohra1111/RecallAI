@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { createDeck, listDecks } from '../controllers/deckController.js'
+import { createDeck, listDecks, getDeckById } from '../controllers/deckController.js'
 import { requireAuth } from '../middleware/requireAuth.js'
 import { validateRequest } from '../middleware/validateRequest.js'
-import { createDeckValidator } from '../validators/deckValidators.js'
+import { createDeckValidator, deckIdValidator } from '../validators/deckValidators.js'
 
 const router = Router()
 
@@ -20,4 +20,11 @@ router.post(
   createDeck
 )
 
+router.get(
+  '/:deckId',
+  requireAuth,
+  deckIdValidator(),
+  validateRequest,
+  getDeckById
+)
 export default router

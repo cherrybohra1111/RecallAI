@@ -1,4 +1,4 @@
-import { body } from 'express-validator'
+import { body, param } from 'express-validator'
 import { FLASHCARD_STATUS } from '../../utils/constants.js'
 
 export function createDeckValidator() {
@@ -66,5 +66,13 @@ export function createDeckValidator() {
       .optional()
       .isIn(Object.values(FLASHCARD_STATUS))
       .withMessage('A card has an invalid status.'),
+  ]
+}
+
+export function deckIdValidator() {
+  return [
+    param('deckId')
+      .isMongoId()
+      .withMessage('Invalid deck ID.'),
   ]
 }
